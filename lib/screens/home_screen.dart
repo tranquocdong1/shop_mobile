@@ -7,6 +7,7 @@ import 'package:mobile_app_shop/screens/cart_screen.dart';
 import 'package:mobile_app_shop/screens/checkout_screen.dart';
 import 'package:mobile_app_shop/screens/contact_screen.dart';
 import 'package:mobile_app_shop/screens/flowers_screen.dart';
+import 'package:mobile_app_shop/screens/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -16,7 +17,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
 
-  // Danh sách các màn hình
+  // Cập nhật danh sách màn hình, thêm ProfileScreen
   final List<Widget> _screens = [
     HomeContent(),
     AboutScreen(),
@@ -25,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
     CheckoutScreen(),
     BlogScreen(),
     ContactScreen(),
+    ProfileScreen(), // Thêm ProfileScreen
   ];
 
   void _onItemTapped(int index) {
@@ -67,29 +69,29 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.contact_mail),
             label: 'Liên hệ',
           ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Hồ sơ', // Thêm mục Profile
+          ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.pink[400], // Màu phù hợp với chủ đề hoa
+        selectedItemColor: Colors.pink[400],
         unselectedItemColor: Colors.grey,
         onTap: _onItemTapped,
-        type: BottomNavigationBarType.fixed, // Để hiển thị tất cả items
+        type: BottomNavigationBarType.fixed,
       ),
     );
   }
 }
 
-// Tách nội dung Home thành widget riêng
+// HomeContent đã xóa nút đăng xuất
 class HomeContent extends StatelessWidget {
-  void _logout(BuildContext context) {
-    Navigator.pushReplacementNamed(context, "/login");
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Flower Shop",
+          "Flower Haven",
           style: TextStyle(
             fontFamily: 'PlayfairDisplay',
             fontSize: 24,
@@ -202,7 +204,7 @@ class HomeContent extends StatelessWidget {
                     context,
                     "Bó Hoa Hồng Đỏ",
                     "250.000 VNĐ",
-                    _rosePlaceholder(), // Placeholder riêng cho hoa hồng
+                    _rosePlaceholder(),
                     isFeatured: true,
                   ),
                   SizedBox(height: 10),
@@ -210,33 +212,13 @@ class HomeContent extends StatelessWidget {
                     context,
                     "Giỏ Hoa Cẩm Chướng",
                     "300.000 VNĐ",
-                    _carnationPlaceholder(), // Placeholder riêng cho cẩm chướng
+                    _carnationPlaceholder(),
                     isFeatured: false,
                   ),
                 ],
               ),
             ),
-
-            // Nút đăng xuất
-            Padding(
-              padding: EdgeInsets.all(20.0),
-              child: Center(
-                child: ElevatedButton(
-                  onPressed: () => _logout(context),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.pink[400],
-                    padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                  child: Text(
-                    "Đăng xuất",
-                    style: TextStyle(fontSize: 16),
-                  ),
-                ),
-              ),
-            ),
+            SizedBox(height: 20), // Thêm khoảng trống dưới cùng
           ],
         ),
       ),
@@ -286,11 +268,11 @@ class HomeContent extends StatelessWidget {
         children: [
           Icon(Icons.local_florist, size: 40, color: Colors.red[400]),
           Image.asset(
-                      "../assets/kind-1.png",
-                      width: double.infinity,
-                      height: 250,
-                      fit: BoxFit.cover,
-                    ),
+            "../assets/kind-1.png",
+            width: double.infinity,
+            height: 250,
+            fit: BoxFit.cover,
+          ),
         ],
       ),
     );
@@ -312,11 +294,11 @@ class HomeContent extends StatelessWidget {
         children: [
           Icon(Icons.local_florist, size: 60, color: Colors.pink[300]),
           Image.asset(
-                      "../assets/kind-2.png",
-                      width: double.infinity,
-                      height: 250,
-                      fit: BoxFit.cover,
-                    ),
+            "../assets/kind-2.png",
+            width: double.infinity,
+            height: 250,
+            fit: BoxFit.cover,
+          ),
         ],
       ),
     );
@@ -340,7 +322,7 @@ class HomeContent extends StatelessWidget {
       ),
       child: Row(
         children: [
-          placeholder, // Sử dụng placeholder riêng cho từng sản phẩm
+          placeholder,
           Expanded(
             child: Padding(
               padding: EdgeInsets.all(10),
