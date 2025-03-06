@@ -10,7 +10,7 @@ class CartService {
     if (response.statusCode == 200) {
       try {
         final jsonData = jsonDecode(response.body) as Map<String, dynamic>;
-        
+
         // Kiểm tra và đảm bảo các trường cần thiết luôn tồn tại
         if (!jsonData.containsKey('items')) {
           jsonData['items'] = [];
@@ -21,7 +21,7 @@ class CartService {
         if (!jsonData.containsKey('count')) {
           jsonData['count'] = 0;
         }
-        
+
         return jsonData;
       } catch (e) {
         print('Lỗi khi parse JSON: $e');
@@ -42,13 +42,13 @@ class CartService {
           .timeout(Duration(seconds: timeoutSeconds));
 
       print('Phản hồi từ server: ${response.statusCode}');
-      
+
       // Kiểm tra cả trường hợp response body rỗng
       if (response.body.isEmpty) {
         print('Phản hồi rỗng từ server');
         return {'items': [], 'subtotal': "0.00", 'count': 0};
       }
-      
+
       print('Nội dung phản hồi: ${response.body}');
       return _handleResponse(response);
     } catch (e) {

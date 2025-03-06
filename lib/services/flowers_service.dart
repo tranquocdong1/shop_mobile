@@ -31,14 +31,14 @@ class FlowersService {
           .timeout(Duration(seconds: timeoutSeconds));
 
       print('Phản hồi từ server: ${response.statusCode}');
-      
+
       // Xử lý dữ liệu từ server Express
       // Chú ý: Vì server Express render view, chúng ta cần API JSON riêng
       // Trong trường hợp này, giả định server cung cấp API /api/products
       final apiResponse = await http
           .get(Uri.parse('$baseUrl/api/products'))
           .timeout(Duration(seconds: timeoutSeconds));
-          
+
       final data = _handleResponse(apiResponse);
       return data is List ? data : [];
     } catch (e) {
@@ -53,7 +53,7 @@ class FlowersService {
       final response = await http
           .get(Uri.parse('$baseUrl/api/product/$productId'))
           .timeout(Duration(seconds: timeoutSeconds));
-      
+
       final data = _handleResponse(response);
       return data is Map<String, dynamic> ? data : {};
     } catch (e) {
@@ -63,16 +63,17 @@ class FlowersService {
   }
 
   // Thêm sản phẩm vào giỏ hàng
-  static Future<Map<String, dynamic>> addToCart(String productId, int quantity) async {
+  static Future<Map<String, dynamic>> addToCart(
+      String productId, int quantity) async {
     try {
       final response = await http
           .post(
-            Uri.parse('$baseUrl/api/cart/add'),
+            Uri.parse('$baseUrl/add-to-cart'), // Thay đổi endpoint này
             headers: {'Content-Type': 'application/json'},
             body: jsonEncode({'productId': productId, 'quantity': quantity}),
           )
           .timeout(Duration(seconds: timeoutSeconds));
-      
+
       final data = _handleResponse(response);
       return data is Map<String, dynamic> ? data : {'success': false};
     } catch (e) {
@@ -82,7 +83,8 @@ class FlowersService {
   }
 
   // Thêm sản phẩm mới (cho admin)
-  static Future<Map<String, dynamic>> addProduct(Map<String, dynamic> productData) async {
+  static Future<Map<String, dynamic>> addProduct(
+      Map<String, dynamic> productData) async {
     try {
       final response = await http
           .post(
@@ -91,7 +93,7 @@ class FlowersService {
             body: jsonEncode(productData),
           )
           .timeout(Duration(seconds: timeoutSeconds));
-      
+
       final data = _handleResponse(response);
       return data is Map<String, dynamic> ? data : {'success': false};
     } catch (e) {
