@@ -99,12 +99,6 @@ class HomeContent extends StatelessWidget {
         ),
         backgroundColor: Colors.pink[50],
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search, color: Colors.pink[400]),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: SingleChildScrollView(
         child: Column(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_app_shop/screens/checkout_screen.dart';
 import 'package:mobile_app_shop/services/cart_service.dart';
 
 class CartScreen extends StatefulWidget {
@@ -125,10 +126,14 @@ class _CartScreenState extends State<CartScreen> {
                                     if (id != null) {
                                       removeItem(id);
                                     } else {
-                                      print('Không thể xóa: ID sản phẩm là null');
+                                      print(
+                                          'Không thể xóa: ID sản phẩm là null');
                                       // Hiển thị thông báo lỗi cho người dùng
-                                      ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(content: Text('Không thể xóa sản phẩm: ID không hợp lệ')),
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Không thể xóa sản phẩm: ID không hợp lệ')),
                                       );
                                     }
                                   }
@@ -149,12 +154,6 @@ class _CartScreenState extends State<CartScreen> {
                           style: TextStyle(
                               fontSize: 18, fontWeight: FontWeight.bold)),
                       SizedBox(height: 10),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/checkout');
-                        },
-                        child: Text("Tiến hành thanh toán"),
-                      ),
                     ],
                   ),
                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_app_shop/screens/cart_screen.dart';
 import 'package:mobile_app_shop/services/flowers_service.dart';
 
 class FlowersScreen extends StatefulWidget {
@@ -23,9 +24,9 @@ class _FlowersScreenState extends State<FlowersScreen> {
         isLoading = true;
         errorMessage = '';
       });
-      
+
       final fetchedProducts = await FlowersService.getProducts();
-      
+
       setState(() {
         products = fetchedProducts;
         isLoading = false;
@@ -68,10 +69,6 @@ class _FlowersScreenState extends State<FlowersScreen> {
       appBar: AppBar(
         title: Text("Cửa hàng hoa"),
         actions: [
-          IconButton(
-            icon: Icon(Icons.shopping_cart),
-            onPressed: () => Navigator.pushNamed(context, '/cart'),
-          ),
         ],
       ),
       body: isLoading
@@ -98,15 +95,19 @@ class _FlowersScreenState extends State<FlowersScreen> {
                             children: [
                               Expanded(
                                 child: GestureDetector(
-                                  onTap: () => navigateToProductDetail(product['_id']),
+                                  onTap: () =>
+                                      navigateToProductDetail(product['_id']),
                                   child: Container(
                                     width: double.infinity,
                                     child: Image.network(
-                                      product['image'] ?? 'https://via.placeholder.com/150',
+                                      product['image'] ??
+                                          'https://via.placeholder.com/150',
                                       fit: BoxFit.cover,
-                                      errorBuilder: (context, error, stackTrace) {
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
                                         print('Lỗi tải hình: $error');
-                                        return Icon(Icons.image_not_supported, size: 80);
+                                        return Icon(Icons.image_not_supported,
+                                            size: 80);
                                       },
                                     ),
                                   ),
@@ -136,7 +137,8 @@ class _FlowersScreenState extends State<FlowersScreen> {
                                     ),
                                     SizedBox(height: 8),
                                     ElevatedButton(
-                                      onPressed: () => addToCart(product['_id']),
+                                      onPressed: () =>
+                                          addToCart(product['_id']),
                                       child: Text('Thêm vào giỏ'),
                                       style: ElevatedButton.styleFrom(
                                         minimumSize: Size(double.infinity, 36),

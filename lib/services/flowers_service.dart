@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:http/http.dart' as http;
 
 class FlowersService {
@@ -30,7 +31,6 @@ class FlowersService {
           .get(Uri.parse('$baseUrl/'))
           .timeout(Duration(seconds: timeoutSeconds));
 
-      print('Phản hồi từ server: ${response.statusCode}');
 
       // Xử lý dữ liệu từ server Express
       // Chú ý: Vì server Express render view, chúng ta cần API JSON riêng
