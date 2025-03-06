@@ -28,26 +28,44 @@ class _CartScreenState extends State<CartScreen> {
     }
   }
 
-  Future<void> removeItem(String productId) async {
+  Future<void> removeItem(String? productId) async {
+    if (productId == null || productId.isEmpty) {
+      print('Không thể xóa sản phẩm: ID null hoặc rỗng');
+      return;
+    }
+
     try {
+      print('Đang xóa sản phẩm có ID: $productId');
       final response = await CartService.removeFromCart(productId);
+
+      if (response['success'] == false) {
+        print('Lỗi khi xóa: ${response['message']}');
+        // Có thể hiển thị thông báo lỗi cho người dùng ở đây
+        return;
+      }
+
       setState(() {
         cartItems = response['items'] ?? [];
         subtotal = double.tryParse(response['subtotal'].toString()) ?? 0.0;
       });
+
+      print(
+          'Đã xóa sản phẩm thành công, số lượng sản phẩm còn lại: ${cartItems.length}');
     } catch (e) {
-      print('Lỗi khi xóa sản phẩm: $e');
+      print('Exception khi xóa sản phẩm: $e');
+      // Hiển thị thông báo lỗi cho người dùng
     }
   }
 
   void updateQuantity(int index, int newQuantity) async {
-    if (newQuantity < 1) return;
-    
+    if (newQuantity < 1 || index >= cartItems.length || index < 0) return;
+
     setState(() {
       cartItems[index]['quantity'] = newQuantity;
       subtotal = cartItems.fold(0.0, (sum, item) {
-        final price = double.tryParse(item['price'].toString()) ?? 0.0;
-        return sum + (price * item['quantity']);
+        final price =
+            double.tryParse(item['price']?.toString() ?? '0.0') ?? 0.0;
+        return sum + (price * (item['quantity'] ?? 1));
       });
     });
   }
@@ -94,7 +112,27 @@ class _CartScreenState extends State<CartScreen> {
                               ),
                               IconButton(
                                 icon: Icon(Icons.delete, color: Colors.red),
-                                onPressed: () => removeItem(item['_id']),
+                                onPressed: () {
+                                  // Fix: Changed from '_id' to 'productId' to match the API response
+                                  String? id = item['productId']?.toString();
+                                  print('ID sản phẩm cần xóa: $id');
+                                  if (id != null) {
+                                    removeItem(id);
+                                  } else {
+                                    // Fallback to '_id' if 'productId' is not available
+                                    id = item['_id']?.toString();
+                                    print('Thử lại với _id: $id');
+                                    if (id != null) {
+                                      removeItem(id);
+                                    } else {
+                                      print('Không thể xóa: ID sản phẩm là null');
+                                      // Hiển thị thông báo lỗi cho người dùng
+                                      ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(content: Text('Không thể xóa sản phẩm: ID không hợp lệ')),
+                                      );
+                                    }
+                                  }
+                                },
                               ),
                             ],
                           ),

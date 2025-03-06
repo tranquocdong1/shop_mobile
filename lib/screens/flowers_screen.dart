@@ -48,11 +48,11 @@ class _FlowersScreenState extends State<FlowersScreen> {
       final response = await FlowersService.addToCart(productId, 1);
       if (response['success'] == true) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Đã thêm vào giỏ hàng')),
+          SnackBar(content: Text('Không thể thêm vào giỏ hàng')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Không thể thêm vào giỏ hàng')),
+          SnackBar(content: Text('Đã thêm vào giỏ hàng')),
         );
       }
     } catch (e) {
