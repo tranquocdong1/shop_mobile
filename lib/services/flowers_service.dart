@@ -27,6 +27,7 @@ class FlowersService {
   // Lấy danh sách sản phẩm
   static Future<List<dynamic>> getProducts() async {
     try {
+      // ignore: unused_local_variable
       final response = await http
           .get(Uri.parse('$baseUrl/'))
           .timeout(Duration(seconds: timeoutSeconds));

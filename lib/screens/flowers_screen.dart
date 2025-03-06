@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_app_shop/screens/cart_screen.dart';
 import 'package:mobile_app_shop/services/flowers_service.dart';
 
 class FlowersScreen extends StatefulWidget {
