@@ -10,24 +10,34 @@ import 'package:mobile_app_shop/screens/flowers_screen.dart';
 import 'package:mobile_app_shop/screens/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
+  final String userEmail;
+
+  // Constructor to receive the email from login screen
+  const HomeScreen({Key? key, this.userEmail = ''}) : super(key: key);
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
   int _selectedIndex = 0;
+  late List<Widget> _screens;
 
-  // Cập nhật danh sách màn hình, thêm ProfileScreen
-  final List<Widget> _screens = [
-    HomeContent(),
-    AboutScreen(),
-    FlowersScreen(),
-    CartScreen(),
-    CheckoutScreen(),
-    BlogScreen(),
-    ContactScreen(),
-    ProfileScreen(), // Thêm ProfileScreen
-  ];
+  @override
+  void initState() {
+    super.initState();
+    // Initialize screens with the userEmail passed to ProfileScreen
+    _screens = [
+      HomeContent(),
+      AboutScreen(),
+      FlowersScreen(),
+      CartScreen(),
+      CheckoutScreen(),
+      BlogScreen(),
+      ContactScreen(),
+      ProfileScreen(userEmail: widget.userEmail), // Pass email to ProfileScreen
+    ];
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -71,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Hồ sơ', // Thêm mục Profile
+            label: 'Hồ sơ', // Profile tab
           ),
         ],
         currentIndex: _selectedIndex,
@@ -84,10 +94,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-// HomeContent đã xóa nút đăng xuất
+// HomeContent remains the same
 class HomeContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Rest of your HomeContent implementation remains unchanged
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -100,6 +111,9 @@ class HomeContent extends StatelessWidget {
         backgroundColor: Colors.pink[50],
         elevation: 0,
       ),
+      // Rest of your code remains the same...
+
+      // Your existing implementation here...
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,9 +185,11 @@ class HomeContent extends StatelessWidget {
                 children: [
                   _categoryCard("Hoa Cưới", Icons.favorite, Colors.pink[200]!),
                   SizedBox(width: 10),
-                  _categoryCard("Hoa Sinh Nhật", Icons.cake, Colors.purple[200]!),
+                  _categoryCard(
+                      "Hoa Sinh Nhật", Icons.cake, Colors.purple[200]!),
                   SizedBox(width: 10),
-                  _categoryCard("Hoa Tặng Mẹ", Icons.local_florist, Colors.red[200]!),
+                  _categoryCard(
+                      "Hoa Tặng Mẹ", Icons.local_florist, Colors.red[200]!),
                 ],
               ),
             ),
@@ -299,7 +315,9 @@ class HomeContent extends StatelessWidget {
   }
 
   // Widget cho product card
-  Widget _productCard(BuildContext context, String name, String price, Widget placeholder, {required bool isFeatured}) {
+  Widget _productCard(
+      BuildContext context, String name, String price, Widget placeholder,
+      {required bool isFeatured}) {
     return Container(
       height: isFeatured ? 120 : 100,
       decoration: BoxDecoration(
@@ -312,7 +330,8 @@ class HomeContent extends StatelessWidget {
             blurRadius: 5,
           ),
         ],
-        border: isFeatured ? Border.all(color: Colors.pink[400]!, width: 2) : null,
+        border:
+            isFeatured ? Border.all(color: Colors.pink[400]!, width: 2) : null,
       ),
       child: Row(
         children: [
@@ -338,7 +357,8 @@ class HomeContent extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey[600],
-                      fontWeight: isFeatured ? FontWeight.bold : FontWeight.normal,
+                      fontWeight:
+                          isFeatured ? FontWeight.bold : FontWeight.normal,
                     ),
                   ),
                   if (isFeatured)

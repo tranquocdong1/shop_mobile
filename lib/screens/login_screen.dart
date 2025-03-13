@@ -18,7 +18,12 @@ class _LoginScreenState extends State<LoginScreen> {
     );
 
     if (response["success"]) {
-      Navigator.pushReplacementNamed(context, "/home"); // Chuyển đến Home nếu đăng nhập thành công
+      // Pass the email to the home screen or directly to profile
+      Navigator.pushReplacementNamed(
+        context,
+        "/home",
+        arguments: {"userEmail": _emailController.text},
+      );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -39,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
     final Color primaryColor = Color(0xFFE57373); // Màu hoa hồng nhạt
     final Color accentColor = Color(0xFF81C784); // Màu lá cây
     final Color backgroundColor = Color(0xFFFFF9F9); // Màu trắng hồng nhạt
-    
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -60,7 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   SizedBox(height: 40),
-                  
+
                   // Logo hoặc icon hoa
                   Center(
                     child: Container(
@@ -84,9 +89,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  
+
                   SizedBox(height: 30),
-                  
+
                   // Tiêu đề
                   Center(
                     child: Text(
@@ -98,9 +103,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  
+
                   SizedBox(height: 40),
-                  
+
                   // Field Email
                   Container(
                     decoration: BoxDecoration(
@@ -134,9 +139,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  
+
                   SizedBox(height: 20),
-                  
+
                   // Field Mật khẩu
                   Container(
                     decoration: BoxDecoration(
@@ -171,9 +176,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  
+
                   SizedBox(height: 40),
-                  
+
                   // Nút Đăng nhập
                   ElevatedButton(
                     onPressed: _login,
@@ -194,9 +199,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  
+
                   SizedBox(height: 16),
-                  
+
                   // Nút Đăng ký
                   TextButton(
                     onPressed: _goToRegister,
@@ -211,19 +216,20 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                   ),
-                  
+
                   SizedBox(height: 30),
-                  
+
                   // Trang trí hoa ở dưới
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Icon(Icons.spa, color: primaryColor.withOpacity(0.6)),
-                      Icon(Icons.local_florist, color: accentColor.withOpacity(0.6)),
+                      Icon(Icons.local_florist,
+                          color: accentColor.withOpacity(0.6)),
                       Icon(Icons.spa, color: primaryColor.withOpacity(0.6)),
                     ],
                   ),
-                  
+
                   SizedBox(height: 20),
                 ],
               ),

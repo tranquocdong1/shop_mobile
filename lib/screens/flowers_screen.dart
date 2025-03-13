@@ -40,7 +40,11 @@ class _FlowersScreenState extends State<FlowersScreen> {
   }
 
   void navigateToProductDetail(String productId) {
-    Navigator.pushNamed(context, '/product-detail', arguments: productId);
+    Navigator.pushNamed(
+      context,
+      '/product-detail',
+      arguments: productId,
+    );
   }
 
   Future<void> addToCart(String productId) async {

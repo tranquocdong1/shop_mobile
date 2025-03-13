@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 
 class ProfileScreen extends StatelessWidget {
+  final String userEmail;
+
+  // Constructor to receive the user email
+  const ProfileScreen({Key? key, required this.userEmail}) : super(key: key);
+
   void _logout(BuildContext context) {
     Navigator.pushReplacementNamed(context, "/login");
   }
 
   @override
   Widget build(BuildContext context) {
+    // Extract username from email (everything before @)
+    String username = userEmail.split('@')[0];
+    // Capitalize first letter of username
+    username = username.isNotEmpty
+        ? '${username[0].toUpperCase()}${username.substring(1)}'
+        : '';
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -31,7 +43,7 @@ class ProfileScreen extends StatelessWidget {
             ),
             SizedBox(height: 20),
             Text(
-              "Tên Người Dùng",
+              username,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -40,7 +52,7 @@ class ProfileScreen extends StatelessWidget {
             ),
             SizedBox(height: 10),
             Text(
-              "email@example.com",
+              userEmail,
               style: TextStyle(fontSize: 16, color: Colors.grey[600]),
             ),
             SizedBox(height: 30),
