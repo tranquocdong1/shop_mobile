@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_app_shop/services/auth_service.dart';
 import 'package:mobile_app_shop/services/cart_service.dart';
 
 class CartScreen extends StatefulWidget {
@@ -13,7 +14,20 @@ class _CartScreenState extends State<CartScreen> {
   @override
   void initState() {
     super.initState();
-    loadCart();
+    _checkLoginAndLoadCart();
+  }
+
+  Future<void> _checkLoginAndLoadCart() async {
+    final userId = await AuthService.getUserId();
+    if (userId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Vui lòng đăng nhập để xem giỏ hàng')),
+      );
+      await Future.delayed(Duration(seconds: 1));
+      Navigator.pushReplacementNamed(context, '/login');
+    } else {
+      loadCart();
+    }
   }
 
   Future<void> loadCart() async {
@@ -33,27 +47,25 @@ class _CartScreenState extends State<CartScreen> {
       print('Không thể xóa sản phẩm: ID null hoặc rỗng');
       return;
     }
-
     try {
       print('Đang xóa sản phẩm có ID: $productId');
       final response = await CartService.removeFromCart(productId);
-
       if (response['success'] == false) {
         print('Lỗi khi xóa: ${response['message']}');
-        // Có thể hiển thị thông báo lỗi cho người dùng ở đây
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(response['message'])),
+        );
         return;
       }
-
       setState(() {
         cartItems = response['items'] ?? [];
         subtotal = double.tryParse(response['subtotal'].toString()) ?? 0.0;
       });
-
-      print(
-          'Đã xóa sản phẩm thành công, số lượng sản phẩm còn lại: ${cartItems.length}');
     } catch (e) {
       print('Exception khi xóa sản phẩm: $e');
-      // Hiển thị thông báo lỗi cho người dùng
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Lỗi khi xóa sản phẩm')),
+      );
     }
   }
 
@@ -68,6 +80,7 @@ class _CartScreenState extends State<CartScreen> {
         return sum + (price * (item['quantity'] ?? 1));
       });
     });
+    // TODO: Gọi API để cập nhật quantity trên server nếu cần
   }
 
   @override
@@ -92,6 +105,16 @@ class _CartScreenState extends State<CartScreen> {
                             width: 50,
                             height: 50,
                             fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) {
+                              print(
+                                  'Lỗi tải hình: $error, URL: ${item['image']}');
+                              return Image.network(
+                                'https://via.placeholder.com/150', // Hình ảnh mặc định
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover,
+                              );
+                            },
                           ),
                           title: Text(item['name'] ?? 'Sản phẩm'),
                           subtitle:
@@ -113,28 +136,16 @@ class _CartScreenState extends State<CartScreen> {
                               IconButton(
                                 icon: Icon(Icons.delete, color: Colors.red),
                                 onPressed: () {
-                                  // Fix: Changed from '_id' to 'productId' to match the API response
                                   String? id = item['productId']?.toString();
                                   print('ID sản phẩm cần xóa: $id');
                                   if (id != null) {
                                     removeItem(id);
                                   } else {
-                                    // Fallback to '_id' if 'productId' is not available
-                                    id = item['_id']?.toString();
-                                    print('Thử lại với _id: $id');
-                                    if (id != null) {
-                                      removeItem(id);
-                                    } else {
-                                      print(
-                                          'Không thể xóa: ID sản phẩm là null');
-                                      // Hiển thị thông báo lỗi cho người dùng
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                'Không thể xóa sản phẩm: ID không hợp lệ')),
-                                      );
-                                    }
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              'Không thể xóa: ID không hợp lệ')),
+                                    );
                                   }
                                 },
                               ),
@@ -149,9 +160,11 @@ class _CartScreenState extends State<CartScreen> {
                   padding: EdgeInsets.all(16),
                   child: Column(
                     children: [
-                      Text("Tổng tiền: \$${subtotal.toStringAsFixed(2)}",
-                          style: TextStyle(
-                              fontSize: 18, fontWeight: FontWeight.bold)),
+                      Text(
+                        "Tổng tiền: \$${subtotal.toStringAsFixed(2)}",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
                       SizedBox(height: 10),
                     ],
                   ),
